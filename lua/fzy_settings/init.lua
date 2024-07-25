@@ -113,6 +113,7 @@ H.apply_config = function(config)
     config.find_cmd = config.find_tool .. " " .. table.concat(config.find_args, " ")
     config.find_all_cmd = config.find_tool .. " " .. table.concat(config.find_all_args, " ")
     config.grep_cmd = config.grep_tool .. " " .. table.concat(config.grep_args, " ")
+    config.git_cmd = "git ls-files --cached --others --exclude-standard"
 end
 
 H.setup_fzy = function(config)
@@ -174,6 +175,16 @@ H.define_commands = function(config)
     vim.api.nvim_create_user_command("FzyAllFiles", function()
         local fzy = require("fzy")
         fzy.execute(config.find_all_cmd, fzy.sinks.edit_file)
+    end, {})
+
+    vim.api.nvim_create_user_command("FzyGitFiles", function()
+        local fzy = require("fzy")
+        fzy.execute(config.git_cmd, fzy.sinks.edit_file)
+    end, {})
+
+    vim.api.nvim_create_user_command("FzyGFiles", function()
+        local fzy = require("fzy")
+        fzy.execute(config.git_cmd, fzy.sinks.edit_file)
     end, {})
 
     vim.api.nvim_create_user_command("FzyBuffer", function()
