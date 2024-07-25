@@ -202,6 +202,12 @@ H.define_commands = function(config)
     vim.api.nvim_create_user_command("FzyQuickfix", function()
         qwahl.quickfix()
     end, {})
+
+    vim.api.nvim_create_user_command("FzyGrep", function(opts)
+        local fzy = require("fzy")
+        local args = opts.args == "" and "." or opts.args
+        fzy.execute(config.grep_cmd .. " " .. args, fzy.sinks.edit_live_grep)
+    end, { nargs = "*" })
 end
 
 function M.setup(config)
