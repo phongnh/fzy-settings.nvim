@@ -52,8 +52,8 @@ end
 
 H.build_find_all_args = function()
     local find_all_args = {
-        fd = { "--type", "file", "--color", "never", "--hidden" },
-        rg = { "--files", "--color", "never", "--ignore-dot", "--ignore-parent", "--hidden" },
+        fd = { "--type", "file", "--color", "never", "--no-ignore", "--hidden", "--follow" },
+        rg = { "--files", "--color", "never", "--no-ignore", "--hidden", "--follow" },
     }
 
     if FzySettings.config.find_tool == "rg" then
