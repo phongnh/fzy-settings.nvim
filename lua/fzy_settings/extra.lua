@@ -86,6 +86,7 @@ function M.mru_in_cwd()
 end
 
 function M.boutline()
+    -- local buf = vim.api.nvim_buf_get_number()
     local bufname = vim.api.nvim_buf_get_name(0)
     assert(vim.fn.filereadable(bufname) == 1, "File to generate tags for must be readable")
     local language_mappings = { cpp = "c++" }
@@ -122,7 +123,8 @@ function M.boutline()
         format_item = function(tag)
             local columns = vim.split(tag, "\t")
             local format = "%4s"
-            return tag
+            local linenr = column[3]:sub(1, -3)
+            return vim.api.nvim_buf_get_lines(0, buf, linenr, linenr + 1)[1]
         end,
     }
     vim.ui.select(tags, opts, function(tag)
