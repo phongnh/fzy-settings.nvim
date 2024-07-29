@@ -168,7 +168,7 @@ H.define_commands = function(config)
     local qwahl = require("qwahl")
     local extra = require("fzy_settings.extra")
 
-    local files = function(cmd)
+    local files = function(cmd, prompt)
         return function(opts)
             local fzy = require("fzy")
             local cwd = vim.fn.empty(opts.args) ~= 1 and opts.args or vim.fn.getcwd()
@@ -176,14 +176,14 @@ H.define_commands = function(config)
                 if selection and vim.trim(selection) ~= "" then
                     vim.cmd("e " .. vim.fs.joinpath(cwd, selection))
                 end
-            end)
+            end, prompt)
         end
     end
 
     vim.api.nvim_create_user_command("FzyFiles", files(config.find_cmd), { nargs = "?", complete = "dir" })
-    vim.api.nvim_create_user_command("FzyAllFiles", files(config.find_all_cmd), { nargs = "?", complete = "dir" })
-    vim.api.nvim_create_user_command("FzyGitFiles", files(config.git_cmd), { nargs = "?", complete = "dir" })
-    vim.api.nvim_create_user_command("FzyGFiles", files(config.git_cmd), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyAllFiles", files(config.find_all_cmd, "'All Files: '"), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyGitFiles", files(config.git_cmd, "'Git Files: '"), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyGFiles", files(config.git_cmd, "'Git Files: '"), { nargs = "?", complete = "dir" })
 
     vim.api.nvim_create_user_command("FzyBuffer", function()
         qwahl.buffers()
