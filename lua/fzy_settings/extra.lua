@@ -49,7 +49,7 @@ function recent_files()
 end
 
 function filtered_recent_files()
-    return vim.tbl_filter(function()
+    return vim.tbl_filter(function(path)
         for _, pattern in ipairs(fzy_mru_exclude) do
             if string.find(path, pattern) then
                 return false
@@ -59,14 +59,22 @@ function filtered_recent_files()
     end, recent_files())
 end
 
-function M.mru()
-    local opts = {
+function M.mru(opts)
+    opts = vim.tbl_extend("keep", {
+        only_cwd = false,
         prompt = "MRU: ",
-        format_item = function(x)
-            return x
+        format_item = function(item)
+            return item
         end,
-    }
-    vim.ui.select(filtered_recent_files(), opts, function(path)
+    }, opts or nil)
+    local items = filtered_recent_files()
+    if opts.only_cwd then
+        local cwd = vim.fn.getcwd()
+        items = vim.tbl_filter(function(path)
+            return vim.startswith(vim.fn.fnamemodify(path, ":p"), cwd)
+        end, items)
+    end
+    vim.ui.select(items, opts, function(path)
         if path then
             vim.cmd("edit " .. path)
         end
@@ -74,24 +82,7 @@ function M.mru()
 end
 
 function M.mru_in_cwd()
-    local cwd_pattern = "^" .. vim.fn.getcwd()
-    local opts = {
-        prompt = "MRU (CWD): ",
-        format_item = function(x)
-            return x
-        end,
-    }
-    vim.ui.select(
-        vim.tbl_filter(function(path)
-            return vim.startswith(vim.fn.fnamemodify(path, ":p"), cwd_pattern)
-        end, filtered_recent_files()),
-        opts,
-        function(path)
-            if path then
-                vim.cmd("edit " .. path)
-            end
-        end
-    )
+    M.mru({ only_cwd = true, prompt = "MRU (CWD): " })
 end
 
 return M
