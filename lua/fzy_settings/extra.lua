@@ -140,7 +140,7 @@ function M.boutline()
 end
 
 function M.format_bufname(bufnr)
-    return vim.fn.fnamemodify(api.nvim_buf_get_name(bufnr), ":.")
+    return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":.")
 end
 
 function M.locationlist()
