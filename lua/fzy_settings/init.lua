@@ -161,34 +161,32 @@ H.define_commands = function(config)
     local qwahl = require("qwahl")
 
     local files = function(cmd)
-        return function()
+        return function(opts)
             local fzy = require("fzy")
-            fzy.execute(cmd, fzy.sinks.edit_file)
+            local cwd = vim.fn.empty(opts.args) ~= 1 and opts.args or vim.fn.getcwd()
+            fzy.execute(string.format("cd %s; %s", cwd, cmd), function(selection)
+                fzy.sinks.edit_file(vim.fs.joinpath(cwd, selection))
+            end)
         end
     end
 
-    vim.api.nvim_create_user_command("FzyFiles", function()
+    vim.api.nvim_create_user_command("FzyFiles", files(config.find_cmd), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyAllFiles", files(config.find_all_cmd), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyGitFiles", files(config.git_cmd), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyGFiles", files(config.git_cmd), { nargs = "?", complete = "dir" })
+
+    vim.api.nvim_create_user_command("FzyBuffer", function()
+        qwahl.buffers()
+    end, {})
+
+    vim.api.nvim_create_user_command("FzyMru", function()
         local fzy = require("fzy")
         fzy.execute(config.find_cmd, fzy.sinks.edit_file)
     end, {})
 
-    vim.api.nvim_create_user_command("FzyAllFiles", function()
+    vim.api.nvim_create_user_command("FzyMru", function()
         local fzy = require("fzy")
-        fzy.execute(config.find_all_cmd, fzy.sinks.edit_file)
-    end, {})
-
-    vim.api.nvim_create_user_command("FzyGitFiles", function()
-        local fzy = require("fzy")
-        fzy.execute(config.git_cmd, fzy.sinks.edit_file)
-    end, {})
-
-    vim.api.nvim_create_user_command("FzyGFiles", function()
-        local fzy = require("fzy")
-        fzy.execute(config.git_cmd, fzy.sinks.edit_file)
-    end, {})
-
-    vim.api.nvim_create_user_command("FzyBuffer", function()
-        qwahl.buffers()
+        fzy.execute(config.find_cmd, fzy.sinks.edit_file)
     end, {})
 
     vim.api.nvim_create_user_command("FzyBLines", function()
