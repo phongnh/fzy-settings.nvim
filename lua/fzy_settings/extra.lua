@@ -124,7 +124,7 @@ function M.boutline()
             if tag then
                 local columns = vim.split(tag, "\t")
                 if #columns > 2 then
-                    local linenr = columns[3]:sub(1, -3)
+                    local linenr = tonumber(columns[3]:sub(1, -3))
                     return vim.trim(vim.api.nvim_buf_get_lines(0, linenr - 1, linenr, false)[1])
                 else
                     return nil
