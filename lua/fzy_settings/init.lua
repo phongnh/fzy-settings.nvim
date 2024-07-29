@@ -221,6 +221,10 @@ H.define_commands = function(config)
         extra.locationlist()
     end, {})
 
+    vim.api.nvim_create_user_command("FzyCommandHistory", function()
+        extra.history_commands()
+    end, {})
+
     vim.api.nvim_create_user_command("FzyGrep", function(opts)
         local fzy = require("fzy")
         local args = opts.args == "" and "." or opts.args

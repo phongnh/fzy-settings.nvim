@@ -164,4 +164,30 @@ function M.locationlist()
     end)
 end
 
+function history_source(history_type)
+    return vim.tbl_filter(
+        function(history)
+            return vim.fn.empty(history) ~= 1
+        end,
+        vim.tbl_map(function(idx)
+            return vim.fn.histget(history_type, -idx)
+        end, vim.fn.range(1, vim.fn.histnr(history_type)))
+    )
+end
+
+function M.history_commands()
+    local commands = history_source(":")
+    local opts = {
+        prompt = "History Commands: ",
+        format_item = function(command)
+            return command
+        end,
+    }
+    vim.ui.select(commands, opts, function(command)
+        if not command then
+            return
+        end
+    end)
+end
+
 return M
