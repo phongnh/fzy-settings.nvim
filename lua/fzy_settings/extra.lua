@@ -60,7 +60,7 @@ function filtered_recent_files()
 end
 
 function M.mru(opts)
-    opts = vim.tbl_extend("keep", {
+    opts = vim.tbl_extend("force", {
         only_cwd = false,
         prompt = "MRU: ",
         format_item = function(item)
