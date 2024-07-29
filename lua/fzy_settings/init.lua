@@ -123,7 +123,8 @@ H.setup_fzy = function(config)
         fzy.command = function(opts)
             local prompt = opts.prompt
             if prompt then
-                vim.env.ZF_PROMPT = prompt
+                -- Remove ' at begining and ending of prmopt. "'Buffer: '" -> "Buffer: "
+                vim.env.ZF_PROMPT = prompt:sub(2, -2)
             else
                 vim.env.ZF_PROMPT = nil
             end
