@@ -122,6 +122,7 @@ function M.boutline()
         prompt = "BOutline: ",
         format_item = function(tag)
             local columns = vim.split(tag, "\t")
+            vim.print("columns", columns)
             local format = "%4s"
             local linenr = columns[3]:sub(1, -3)
             vim.print("linenr", linenr)
