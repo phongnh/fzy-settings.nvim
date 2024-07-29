@@ -213,6 +213,10 @@ H.define_commands = function(config)
         extra.boutline()
     end, {})
 
+    vim.api.nvim_create_user_command("FzyCommands", function()
+        extra.commands()
+    end, {})
+
     vim.api.nvim_create_user_command("FzyCommandHistory", function()
         extra.command_history()
     end, {})

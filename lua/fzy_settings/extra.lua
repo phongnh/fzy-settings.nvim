@@ -164,6 +164,21 @@ function M.locationlist()
     end)
 end
 
+function M.commands()
+    local opts = {
+        prompt = "Commands: ",
+        format_item = function(command)
+            return command
+        end,
+    }
+    local commands = vim.list_slice(vim.split(vim.fn.call("execute", { "command" }), "\n"), 2)
+    vim.ui.select(commands, opts, function(command)
+        if not command then
+            return
+        end
+    end)
+end
+
 function history_source(history_type)
     return vim.tbl_filter(
         function(history)
