@@ -220,6 +220,7 @@ H.define_commands = function(config)
     vim.api.nvim_create_user_command("FzySearchHistory", function()
         extra.search_history()
     end, {})
+
     vim.api.nvim_create_user_command("FzyQuickfix", function()
         qwahl.quickfix()
     end, {})
