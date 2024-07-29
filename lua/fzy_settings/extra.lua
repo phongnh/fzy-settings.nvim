@@ -92,7 +92,7 @@ function M.boutline()
     local language_mappings = { cpp = "c++" }
     local language_options = { ruby = " --kinds-ruby=-r" }
     local language = language_mappings[vim.bo.filetype] or vim.bo.filetype
-    local null = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and "nul" : "/dev/null"
+    local null = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and "nul" or "/dev/null"
     local ok, output = pcall(vim.fn.system, {
         "ctags",
         "-f",
