@@ -86,7 +86,7 @@ function M.mru_in_cwd()
 end
 
 function M.boutline()
-    local buf = vim.api.nvim_buf_get_number()
+    local buf = vim.api.nvim_get_current_buf()
     local bufname = vim.api.nvim_buf_get_name(buf)
     assert(vim.fn.filereadable(bufname) == 1, "File to generate tags for must be readable")
     local language_mappings = { cpp = "c++" }
