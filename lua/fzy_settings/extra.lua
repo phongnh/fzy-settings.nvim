@@ -139,4 +139,29 @@ function M.boutline()
     end)
 end
 
+function M.format_bufname(bufnr)
+    return vim.fn.fnamemodify(api.nvim_buf_get_name(bufnr), ":.")
+end
+
+function M.locationlist()
+    vim.cmd("lclose")
+    local items = vim.fn.getloclist(0)
+    local win = vim.api.nvim_get_current_win()
+    local opts = {
+        prompt = "LocationList: ",
+        format_item = function(item)
+            return M.format_bufname(item.bufnr) .. ": " .. item.text
+        end,
+    }
+    vim.ui.select(items, opts, function(item, idx)
+        if not item then
+            return
+        end
+        vim.api.nvim_win_call(win, function()
+            vim.cmd("ll " .. tostring(idx))
+            vim.cmd("normal! zvzz")
+        end)
+    end)
+end
+
 return M

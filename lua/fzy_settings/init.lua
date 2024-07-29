@@ -217,6 +217,10 @@ H.define_commands = function(config)
         qwahl.quickfix()
     end, {})
 
+    vim.api.nvim_create_user_command("FzyLocationList", function()
+        extra.locationlist()
+    end, {})
+
     vim.api.nvim_create_user_command("FzyGrep", function(opts)
         local fzy = require("fzy")
         local args = opts.args == "" and "." or opts.args
