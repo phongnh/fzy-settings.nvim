@@ -168,14 +168,21 @@ function M.commands()
     local opts = {
         prompt = "Commands: ",
         format_item = function(command)
-            return command
+            -- local attr = command:sub(1, 4)
+            local list = vim.split(command:sub(5, -1), " ")
+            local name = list[1]
+            -- local line = vim.trim(vim.fn.join(vim.list_slice(list, 2), " "))
+            -- local args = vim.trim(line:sub(1, 4))
+            -- local definition = vim.trim(line:sub(26))
+            return name
         end,
     }
-    local commands = vim.list_slice(vim.split(vim.fn.call("execute", { "command" }), "\n"), 2)
+    local commands = vim.list_slice(vim.split(vim.fn.call("execute", { "command" }), "\n"), 3)
     vim.ui.select(commands, opts, function(command)
         if not command then
             return
         end
+        vim.api.nvim_feedkeys(":" .. command, "n", false)
     end)
 end
 
