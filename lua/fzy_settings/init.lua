@@ -181,9 +181,9 @@ H.define_commands = function(config)
     end
 
     vim.api.nvim_create_user_command("FzyFiles", files(config.find_cmd), { nargs = "?", complete = "dir" })
-    vim.api.nvim_create_user_command("FzyAllFiles", files(config.find_all_cmd, "'All Files: '"), { nargs = "?", complete = "dir" })
-    vim.api.nvim_create_user_command("FzyGitFiles", files(config.git_cmd, "'Git Files: '"), { nargs = "?", complete = "dir" })
-    vim.api.nvim_create_user_command("FzyGFiles", files(config.git_cmd, "'Git Files: '"), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyAllFiles", files(config.find_all_cmd, "All Files: "), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyGitFiles", files(config.git_cmd, "Git Files: "), { nargs = "?", complete = "dir" })
+    vim.api.nvim_create_user_command("FzyGFiles", files(config.git_cmd, "Git Files: "), { nargs = "?", complete = "dir" })
 
     vim.api.nvim_create_user_command("FzyBuffer", function()
         qwahl.buffers()
