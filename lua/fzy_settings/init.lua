@@ -210,7 +210,7 @@ H.define_commands = function(config)
     end, {})
 
     vim.api.nvim_create_user_command("FzyBOutline", function()
-        extra.boutine()
+        extra.boutline()
     end, {})
 
     vim.api.nvim_create_user_command("FzyQuickfix", function()
