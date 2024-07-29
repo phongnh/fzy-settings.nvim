@@ -165,19 +165,17 @@ function M.locationlist()
 end
 
 function M.commands()
+    local global_commands = vim.api.nvim_get_commands({})
+    local buf_commands = vim.api.nvim_buf_get_commands(0, {})
+    local commands = vim.tbl_map(function(key, command)
+        return command.name
+    end, vim.tbl_extend("force", {}, global_commands, buf_commands))
     local opts = {
         prompt = "Commands: ",
         format_item = function(command)
-            -- local attr = command:sub(1, 4)
-            local list = vim.split(command:sub(5, -1), " ")
-            local name = list[1]
-            -- local line = vim.trim(vim.fn.join(vim.list_slice(list, 2), " "))
-            -- local args = vim.trim(line:sub(1, 4))
-            -- local definition = vim.trim(line:sub(26))
-            return name
+            return command
         end,
     }
-    local commands = vim.list_slice(vim.split(vim.fn.call("execute", { "command" }), "\n"), 3)
     vim.ui.select(commands, opts, function(command)
         if not command then
             return
