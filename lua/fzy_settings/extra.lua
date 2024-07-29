@@ -86,33 +86,30 @@ function M.mru_in_cwd()
 end
 
 function M.boutline()
+    local win = api.nvim_get_current_win()
     local buf = vim.api.nvim_get_current_buf()
     local bufname = vim.api.nvim_buf_get_name(buf)
     assert(vim.fn.filereadable(bufname) == 1, "File to generate tags for must be readable")
     local language_mappings = { cpp = "c++" }
     local language_options = { ruby = " --kinds-ruby=-r" }
     local language = language_mappings[vim.bo.filetype] or vim.bo.filetype
-    local null = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and "nul" or "/dev/null"
     local ok, output = pcall(vim.fn.system, {
         "ctags",
         "-f",
         "-",
         "--sort=no",
-        "--excmd=number",
-        language_options[language] or "",
+        "--excmd=number" .. (language_options[language] or ""),
         "--language-force=" .. language,
         bufname,
-        "2> " .. null,
     })
     if not ok or vim.api.nvim_get_vvar("shell_error") ~= 0 then
         output = vim.fn.system({
             "ctags",
             "-f",
+            "-",
             "--sort=no",
-            "--excmd=number",
-            language_options[language] or "",
+            "--excmd=number" .. (language_options[language] or ""),
             bufname,
-            "2> " .. null,
         })
     end
     assert(vim.api.nvim_get_vvar("shell_error") == 0, "Failed to extract tags")
@@ -133,6 +130,12 @@ function M.boutline()
         if not tag then
             return
         end
+        local columns = vim.split(tag, "\t")
+        local linenr = tonumber(columns[3]:sub(1, -3))
+        api.nvim_win_set_cursor(win, { linenr, 0 })
+        api.nvim_win_call(win, function()
+            vim.cmd("normal! zvzz")
+        end)
     end)
 end
 
