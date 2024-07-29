@@ -85,4 +85,51 @@ function M.mru_in_cwd()
     M.mru({ only_cwd = true, prompt = "MRU (CWD): " })
 end
 
+function M.boutline()
+    local bufname = vim.api.nvim_buf_get_name(0)
+    assert(vim.fn.filereadable(bufname) == 1, "File to generate tags for must be readable")
+    local language_mappings = { cpp = "c++" }
+    local language_options = { ruby = " --kinds-ruby=-r" }
+    local language = language_mappings[vim.bo.filetype] or vim.bo.filetype
+    local ok, output = pcall(vim.fn.system, {
+        "ctags",
+        "-f",
+        "-",
+        "--sort=no",
+        "--excmd=number",
+        language_options[language] or "",
+        "--language-force=" .. language,
+        bufname,
+    })
+    if not ok or vim.api.nvim_get_vvar("shell_error") ~= 0 then
+        output = vim.fn.system({
+            "ctags",
+            "-f",
+            "--sort=no",
+            "--excmd=number",
+            language_options[language] or "",
+            bufname,
+        })
+    end
+    assert(vim.api.nvim_get_vvar("shell_error") == 0, "Failed to extract tags")
+    local lines = vim.tbl_filter(function(x)
+        return x ~= ""
+    end, vim.split(output, "\n"))
+    assert(#lines > 0, "No tags found")
+    local tags = lines
+    local opts = {
+        prompt = "BOutline: ",
+        format_item = function(tag)
+            local columns = vim.split(tag, "\t")
+            local format = "%4s"
+            return tag
+        end,
+    }
+    vim.ui.select(tags, opts, function(tag)
+        if not tag then
+            return
+        end
+    end)
+end
+
 return M
