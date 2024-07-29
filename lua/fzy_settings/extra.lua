@@ -164,4 +164,70 @@ function M.locationlist()
     end)
 end
 
+function M.commands()
+    local global_commands = vim.api.nvim_get_commands({})
+    local buf_commands = vim.api.nvim_buf_get_commands(0, {})
+    local commands = vim.tbl_map(
+        function(command)
+            return command.name
+        end,
+        vim.tbl_filter(function(command)
+            return type(command) == "table"
+        end, vim.tbl_extend("force", {}, global_commands, buf_commands))
+    )
+    local opts = {
+        prompt = "Commands: ",
+        format_item = function(command)
+            return command
+        end,
+    }
+    vim.ui.select(commands, opts, function(command)
+        if not command then
+            return
+        end
+        vim.api.nvim_feedkeys(":" .. command, "n", false)
+    end)
+end
+
+function history_source(history_type)
+    return vim.tbl_filter(
+        function(history)
+            return vim.fn.empty(history) ~= 1
+        end,
+        vim.tbl_map(function(idx)
+            return vim.trim(vim.fn.histget(history_type, -idx))
+        end, vim.fn.range(1, vim.fn.histnr(history_type)))
+    )
+end
+
+function M.command_history()
+    local opts = {
+        prompt = "Command History: ",
+        format_item = function(command)
+            return command
+        end,
+    }
+    vim.ui.select(history_source(":"), opts, function(command)
+        if not command then
+            return
+        end
+        vim.api.nvim_feedkeys(":" .. command, "n", false)
+    end)
+end
+
+function M.search_history()
+    local opts = {
+        prompt = "Search History: ",
+        format_item = function(search)
+            return search
+        end,
+    }
+    vim.ui.select(history_source("/"), opts, function(search)
+        if not search then
+            return
+        end
+        vim.api.nvim_feedkeys("/" .. search, "n", false)
+    end)
+end
+
 return M
