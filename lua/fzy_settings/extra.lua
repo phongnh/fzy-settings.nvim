@@ -124,7 +124,8 @@ function M.boutline()
             local columns = vim.split(tag, "\t")
             local format = "%4s"
             local linenr = column[3]:sub(1, -3)
-            return vim.api.nvim_buf_get_lines(0, buf, linenr, linenr + 1)[1]
+            vim.print("linenr", linenr)
+            return vim.api.nvim_buf_get_lines(0, linenr, linenr + 1, false)[1]
         end,
     }
     vim.ui.select(tags, opts, function(tag)
