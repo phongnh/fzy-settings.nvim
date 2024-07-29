@@ -170,7 +170,7 @@ function history_source(history_type)
             return vim.fn.empty(history) ~= 1
         end,
         vim.tbl_map(function(idx)
-            return vim.fn.histget(history_type, -idx)
+            return vim.trim(vim.fn.histget(history_type, -idx))
         end, vim.fn.range(1, vim.fn.histnr(history_type)))
     )
 end
