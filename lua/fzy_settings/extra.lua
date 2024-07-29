@@ -66,7 +66,7 @@ function M.mru(opts)
         format_item = function(item)
             return item
         end,
-    }, opts or nil)
+    }, opts or {})
     local items = filtered_recent_files()
     if opts.only_cwd then
         local cwd = vim.fn.getcwd()
