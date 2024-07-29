@@ -121,9 +121,14 @@ function M.boutline()
     local opts = {
         prompt = "BOutline: ",
         format_item = function(tag)
-            local columns = vim.split(tag, "\t")
-            local linenr = columns[3]:sub(1, -3)
-            return vim.trim(vim.api.nvim_buf_get_lines(0, linenr - 1, linenr, false)[1])
+            if tag then
+                local columns = vim.split(tag, "\t")
+                local linenr = columns[3]:sub(1, -3)
+                return columns[1]
+                -- return vim.trim(vim.api.nvim_buf_get_lines(0, linenr - 1, linenr, false)[1])
+            else
+                return nil
+            end
         end,
     }
     vim.ui.select(tags, opts, function(tag)
