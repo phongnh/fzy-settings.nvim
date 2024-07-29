@@ -92,6 +92,7 @@ function M.boutline()
     local language_mappings = { cpp = "c++" }
     local language_options = { ruby = " --kinds-ruby=-r" }
     local language = language_mappings[vim.bo.filetype] or vim.bo.filetype
+    local null = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and "nul" : "/dev/null"
     local ok, output = pcall(vim.fn.system, {
         "ctags",
         "-f",
@@ -101,6 +102,7 @@ function M.boutline()
         language_options[language] or "",
         "--language-force=" .. language,
         bufname,
+        "2> " .. null,
     })
     if not ok or vim.api.nvim_get_vvar("shell_error") ~= 0 then
         output = vim.fn.system({
@@ -110,6 +112,7 @@ function M.boutline()
             "--excmd=number",
             language_options[language] or "",
             bufname,
+            "2> " .. null,
         })
     end
     assert(vim.api.nvim_get_vvar("shell_error") == 0, "Failed to extract tags")
