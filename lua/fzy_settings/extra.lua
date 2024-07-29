@@ -86,8 +86,8 @@ function M.mru_in_cwd()
 end
 
 function M.boutline()
-    -- local buf = vim.api.nvim_buf_get_number()
-    local bufname = vim.api.nvim_buf_get_name(0)
+    local buf = vim.api.nvim_buf_get_number()
+    local bufname = vim.api.nvim_buf_get_name(buf)
     assert(vim.fn.filereadable(bufname) == 1, "File to generate tags for must be readable")
     local language_mappings = { cpp = "c++" }
     local language_options = { ruby = " --kinds-ruby=-r" }
@@ -126,7 +126,7 @@ function M.boutline()
                 if #columns > 2 then
                     local linenr = tonumber(columns[3]:sub(1, -3))
                     vim.print("linenumber", linenr)
-                    return columns[1] .. " " .. vim.trim(vim.api.nvim_buf_get_lines(0, linenr - 1, linenr, false)[1])
+                    return columns[1] .. " " .. vim.trim(vim.api.nvim_buf_get_lines(buf, linenr - 1, linenr, false)[1])
                 else
                     return nil
                 end
