@@ -159,6 +159,7 @@ end
 
 H.define_commands = function(config)
     local qwahl = require("qwahl")
+    local extra = require("fzy_settings.extra")
 
     local files = function(cmd)
         return function(opts)
@@ -182,13 +183,15 @@ H.define_commands = function(config)
     end, {})
 
     vim.api.nvim_create_user_command("FzyMru", function()
-        local fzy = require("fzy")
-        fzy.execute(config.find_cmd, fzy.sinks.edit_file)
+        extra.mru()
     end, {})
 
-    vim.api.nvim_create_user_command("FzyMru", function()
-        local fzy = require("fzy")
-        fzy.execute(config.find_cmd, fzy.sinks.edit_file)
+    vim.api.nvim_create_user_command("FzyMruCwd", function()
+        extra.mru_in_cwd()
+    end, {})
+
+    vim.api.nvim_create_user_command("FzyMruInCwd", function()
+        extra.mru_in_cwd()
     end, {})
 
     vim.api.nvim_create_user_command("FzyBLines", function()
