@@ -175,18 +175,33 @@ function history_source(history_type)
     )
 end
 
-function M.history_commands()
-    local commands = history_source(":")
+function M.command_history()
     local opts = {
-        prompt = "History Commands: ",
+        prompt = "Command History: ",
         format_item = function(command)
             return command
         end,
     }
-    vim.ui.select(commands, opts, function(command)
+    vim.ui.select(history_source(":"), opts, function(command)
         if not command then
             return
         end
+        vim.api.nvim_feedkeys(":" .. command, "n", false)
+    end)
+end
+
+function M.search_history()
+    local opts = {
+        prompt = "Search History: ",
+        format_item = function(search)
+            return search
+        end,
+    }
+    vim.ui.select(history_source("/"), opts, function(search)
+        if not search then
+            return
+        end
+        vim.api.nvim_feedkeys("/" .. search, "n", false)
     end)
 end
 

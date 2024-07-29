@@ -222,7 +222,11 @@ H.define_commands = function(config)
     end, {})
 
     vim.api.nvim_create_user_command("FzyCommandHistory", function()
-        extra.history_commands()
+        extra.command_history()
+    end, {})
+
+    vim.api.nvim_create_user_command("FzySearchHistory", function()
+        extra.search_history()
     end, {})
 
     vim.api.nvim_create_user_command("FzyGrep", function(opts)
