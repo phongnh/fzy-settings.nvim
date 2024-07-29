@@ -93,7 +93,7 @@ H.apply_config = function(config)
 
     if config.filter_tool == "zf" and vim.fn.executable("zf") == 1 then
         config.filter_tool = "zf"
-    else
+    elseif not vim.endswith(config.filter_tool, "fzy") then
         config.filter_tool = "fzy"
     end
 
@@ -121,15 +121,21 @@ H.setup_fzy = function(config)
 
     if config.filter_tool == "zf" then
         fzy.command = function(opts)
+            local prompt = opts.prompt
+            if prompt then
+                vim.env.ZF_PROMPT = prompt
+            else
+                vim.env.ZF_PROMPT = nil
+            end
             return string.format("zf --height %d", opts.height)
         end
     else
         fzy.command = function(opts)
             local prompt = opts.prompt
             if prompt then
-                return string.format("fzy -i -l %d -p %s", opts.height, prompt)
+                return string.format("%s -i -l %d -p %s", config.filter_tool, opts.height, prompt)
             else
-                return string.format("fzy -i -l %d", opts.height)
+                return string.format("%s -i -l %d", config.filter_tool, opts.height)
             end
         end
     end
