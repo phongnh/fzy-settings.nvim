@@ -122,11 +122,8 @@ function M.boutline()
         prompt = "BOutline: ",
         format_item = function(tag)
             local columns = vim.split(tag, "\t")
-            vim.print("columns", columns)
-            local format = "%4s"
             local linenr = columns[3]:sub(1, -3)
-            vim.print("linenr", linenr)
-            return vim.api.nvim_buf_get_lines(0, linenr, linenr + 1, false)[1]
+            return vim.trim(vim.api.nvim_buf_get_lines(0, linenr - 1, linenr, false)[1])
         end,
     }
     vim.ui.select(tags, opts, function(tag)
