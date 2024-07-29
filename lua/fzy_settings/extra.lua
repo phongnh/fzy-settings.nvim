@@ -123,7 +123,7 @@ function M.boutline()
         format_item = function(tag)
             local columns = vim.split(tag, "\t")
             local format = "%4s"
-            local linenr = column[3]:sub(1, -3)
+            local linenr = columns[3]:sub(1, -3)
             vim.print("linenr", linenr)
             return vim.api.nvim_buf_get_lines(0, linenr, linenr + 1, false)[1]
         end,
