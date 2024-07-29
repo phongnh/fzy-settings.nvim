@@ -165,7 +165,9 @@ H.define_commands = function(config)
             local fzy = require("fzy")
             local cwd = vim.fn.empty(opts.args) ~= 1 and opts.args or vim.fn.getcwd()
             fzy.execute(string.format("cd %s; %s", cwd, cmd), function(selection)
-                fzy.sinks.edit_file(vim.fs.joinpath(cwd, selection))
+                if selection and vim.trim(selection) ~= "" then
+                    vim.cmd("e " .. vim.fs.joinpath(cwd, selection))
+                end
             end)
         end
     end
