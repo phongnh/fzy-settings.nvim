@@ -167,9 +167,14 @@ end
 function M.commands()
     local global_commands = vim.api.nvim_get_commands({})
     local buf_commands = vim.api.nvim_buf_get_commands(0, {})
-    local commands = vim.tbl_map(function(key, command)
-        return command.name
-    end, vim.tbl_extend("force", {}, global_commands, buf_commands))
+    local commands = vim.tbl_map(
+        function(command)
+            return command.name
+        end,
+        vim.tbl_filter(function(command)
+            return type(command) == "table"
+        end, vim.tbl_extend("force", {}, global_commands, buf_commands))
+    )
     local opts = {
         prompt = "Commands: ",
         format_item = function(command)
