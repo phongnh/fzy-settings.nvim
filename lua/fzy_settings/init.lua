@@ -209,6 +209,10 @@ H.define_commands = function(config)
         qwahl.buf_tags()
     end, {})
 
+    vim.api.nvim_create_user_command("FzyBOutline", function()
+        extra.boutline()
+    end, {})
+
     vim.api.nvim_create_user_command("FzyQuickfix", function()
         qwahl.quickfix()
     end, {})
